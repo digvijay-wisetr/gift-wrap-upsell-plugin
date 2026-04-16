@@ -91,6 +91,7 @@ function gwu_get_active_wraps( WP_REST_Request $request ) {
 
     $args = [
         'post_type'      => 'gift_wrap_option',
+        'post_status'    => 'publish',
         'posts_per_page'         => $per_page,
         'paged'                  => $page,                                                                                        
         'update_post_term_cache' => false,
@@ -98,7 +99,7 @@ function gwu_get_active_wraps( WP_REST_Request $request ) {
             [                                                                                                                          
                 // update_post_meta stores booleans as string '1' — match the storage format.
                 'key'     => 'is_active',                                                                                            
-                'value'   => '1',  // Stored as string '1' in DB
+                'value'   => '1', 
                 'compare' => '=',                                                                                                 
             ],
         ],

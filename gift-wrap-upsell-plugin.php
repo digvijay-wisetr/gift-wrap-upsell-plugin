@@ -22,8 +22,8 @@ require_once GWU_PATH . 'includes/helpers.php';
 require_once GWU_PATH . 'includes/post-types.php';
 require_once GWU_PATH . 'includes/meta.php';
 require_once GWU_PATH . 'includes/rest-api.php';
-
-
+require_once GWU_PATH . 'includes/admin.php';
+require_once GWU_PATH . 'includes/enqueue.php';
 
 add_action( 'init', function () {
       load_plugin_textdomain( 'gift-wrap', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );                               
