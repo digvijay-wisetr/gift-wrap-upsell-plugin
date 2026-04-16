@@ -17,4 +17,10 @@ function gwu_admin_scripts( $hook ) {
         GWU_VERSION,
         true
     );
+
+    wp_localize_script( 'gwu-admin-js', 'gwuAdmin', [                                                                                      
+      'mediaTitle'    => __( 'Select Image', 'gift-wrap' ),                                                                              
+      'mediaButton'   => __( 'Use this image', 'gift-wrap' ),                                                                            
+      'invalidImage'  => __( 'Please select a valid image.', 'gift-wrap' ),                                                              
+  ] );
 }

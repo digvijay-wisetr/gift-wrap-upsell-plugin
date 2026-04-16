@@ -11,8 +11,8 @@ jQuery(function ($) {
         }
 
         frame = wp.media({
-            title: 'Select Image',
-            button: { text: 'Use this image' },
+            title: gwuAdmin.mediaTitle,
+            button: { text: gwuAdmin.mediaButton },
             multiple: false,
             library: {
                 type: 'image'
@@ -24,7 +24,7 @@ jQuery(function ($) {
 
             // Extra safety (optional)
             if (!attachment.type || attachment.type !== 'image') {
-                alert('Please select a valid image.');
+                alert(gwuAdmin.invalidImage);
                 return;
             }
 
@@ -44,6 +44,7 @@ jQuery(function ($) {
         $('#gwu_image_id').val('');
         $('#gwu_image_preview').html('');
         $(this).hide();
+        frame = null; // force fresh frame next open 
     });
 
 });
