@@ -105,7 +105,8 @@ class GWU_Wraps_Table extends WP_List_Table {
           $counts = wp_count_posts( 'gift_wrap_option' );
                                                                                                                                                                
           $all_count   = (int) $counts->publish + (int) $counts->draft;
-          $pub_count   = (int) $counts->publish;                                                                                                               
+          $pub_count   = (int) $counts->publish;     
+          $draft_count = (int) $counts->draft;                                                                                                          
           $trash_count = (int) $counts->trash;                                                                                                                 
    
           $views = [];                                                                                                                                         
@@ -124,7 +125,16 @@ class GWU_Wraps_Table extends WP_List_Table {
               $current === 'publish' ? 'current' : '',                                                                                                         
               esc_html__( 'Published', 'gift-wrap' ),
               $pub_count                                                                                                                                       
+          );    
+          
+           $views['draft'] = sprintf(                                                                                                                         
+              '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+              esc_url( add_query_arg( 'post_status', 'draft', $base_url ) ),                                                                                 
+              $current === 'draft' ? 'current' : '',                                                                                                         
+              esc_html__( 'Draft', 'gift-wrap' ),
+              $draft_count                                                                                                                                      
           );      
+
 
           $views['trash'] = sprintf(
               '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
@@ -137,18 +147,30 @@ class GWU_Wraps_Table extends WP_List_Table {
     }
 
     public function prepare_items() {
-        $per_page = 3;
+        $per_page = 5;
         $current  = $this->get_pagenum();  
         // get_pagenum() reads $_GET['paged'] — WP_List_Table's built-in                                                                                         
         // pagination links set this parameter automatically.
-        
+        $allowed_statuses = [ 'publish', 'draft', 'trash' ];
+
         $status = isset( $_GET['post_status'] )
-              ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )                                                                                      
-              : 'any';
+            ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )
+            : 'all';
+
+        // If a specific valid status is selected, use it. Otherwise show publish + draft.
+        if ( in_array( $status, $allowed_statuses, true ) ) {
+            $post_status = $status;
+        } else {
+            $post_status = [ 'publish', 'draft' ];
+        }
+        
+        // $status = isset( $_GET['post_status'] )
+        //       ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )                                                                                      
+        //       : 'any';
 
         $query = new WP_Query([
             'post_type'      => 'gift_wrap_option',
-            'post_status'    => $status === 'trash' ? 'trash' : [ 'publish', 'draft' ],
+            'post_status'    =>  $post_status,
             'posts_per_page' => $per_page,
             'paged'          => $current, 
         ]);
