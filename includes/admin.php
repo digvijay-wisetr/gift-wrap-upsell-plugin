@@ -1,7 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 function gwu_register_admin_page() {
    add_submenu_page(
         'edit.php?post_type=gift_wrap_option', // attach to CPT
@@ -15,20 +14,36 @@ function gwu_register_admin_page() {
 
 add_action( 'admin_menu', 'gwu_register_admin_page' );
 
-add_filter( 'manage_gift_wrap_option_posts_columns', function ( $cols ) {                                                              
-      $cols['surcharge'] = __( 'Surcharge', 'gift-wrap' );                                                                               
-      $cols['is_active'] = __( 'Active',    'gift-wrap' );
-      $cols['expiry']    = __( 'Expires',   'gift-wrap' );                                                                               
-      return $cols;                                                                                                                      
-  } );                                                                                                                                   
+function gwu_register_view_pages() {                                                                                                                       
+      add_submenu_page(
+          'edit.php?post_type=gift_wrap_option',
+          __( 'All Wraps', 'gift-wrap' ),
+          __( 'All Wraps', 'gift-wrap' ),                                                                                                                      
+          'edit_posts',
+          'gwu-wrap-view',                                                                                                                                     
+          'gwu_render_view_page'                                                                                                                               
+      );
+}
+add_action( 'admin_menu', 'gwu_register_view_pages' );
+
+
+
+// add_filter( 'manage_gift_wrap_option_posts_columns', function ( $cols ) {                                                              
+//       $cols['surcharge'] = __( 'Surcharge', 'gift-wrap' );                                                                               
+//       $cols['is_active'] = __( 'Active',    'gift-wrap' );
+//       $cols['expiry']    = __( 'Expires',   'gift-wrap' );                                                                               
+//       return $cols;                                                                                                                      
+//   } );       
+  
+  
                                                                                                                                          
-add_action( 'manage_gift_wrap_option_posts_custom_column', function ( $col, $post_id ) {                                               
-    switch ( $col ) {
-        case 'surcharge': echo esc_html( number_format_i18n( (float) get_post_meta( $post_id, 'surcharge', true ), 2 ) ); break;       
-        case 'is_active': echo esc_html( get_post_meta( $post_id, 'is_active', true ) ? '✓' : '—' ); break;                                        
-        case 'expiry':    echo esc_html( (string) get_post_meta( $post_id, 'expiry_date', true ) ); break;                             
-    }                                                                                                                                  
-}, 10, 2 ); 
+// add_action( 'manage_gift_wrap_option_posts_custom_column', function ( $col, $post_id ) {                                               
+//     switch ( $col ) {
+//         case 'surcharge': echo esc_html( number_format_i18n( (float) get_post_meta( $post_id, 'surcharge', true ), 2 ) ); break;       
+//         case 'is_active': echo esc_html( get_post_meta( $post_id, 'is_active', true ) ? '✓' : '—' ); break;                                        
+//         case 'expiry':    echo esc_html( (string) get_post_meta( $post_id, 'expiry_date', true ) ); break;                             
+//     }                                                                                                                                  
+// }, 10, 2 ); 
 
 
 
@@ -98,10 +113,85 @@ add_action( 'admin_post_gwu_save_wrap', 'gwu_handle_form_submit' );
 
 
 
-
-function gwu_render_admin_page() {
-
+// function for rendering the list of wraper inside view wraper sub menu
+ function gwu_render_view_page() {
+    $post_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
+                                                                                                                                                               
+      if ( $post_id > 0 ) {
+          gwu_render_single_wrap( $post_id );
+          return;                                                                                                                                              
+      }                                                                                                                                                    
+      // No post_id — show the list table
     ?>
+    <div class="wrap">
+        <h1><?php echo esc_html__( 'All Gift Wraps', 'gift-wrap' ); ?></h1>                                                                                  
+        <?php
+        $table = new GWU_Wraps_Table();                                                                                                                      
+        $table->prepare_items();
+        $table->display();                                                                                                                                   
+        ?>      
+    </div>
+                                                                                                                                                       
+<?php                                                                                                                                                    
+} 
+
+// Function for rendering the single wraper details
+function gwu_render_single_wrap( $post_id ) {                                                                                                                
+                  
+      if ( ! current_user_can( 'edit_posts' ) ) {                                                                                                              
+          wp_die( esc_html__( 'Unauthorized', 'gift-wrap' ) );
+      }                                                                                                                                                        
+                  
+      $post = get_post( $post_id );                                                                                                                            
+   
+      if ( ! $post instanceof WP_Post || $post->post_type !== 'gift_wrap_option' ) {                                                                           
+          wp_die( esc_html__( 'Wrap not found.', 'gift-wrap' ) );
+      }                                                                                                                                                        
+   
+      $surcharge = get_post_meta( $post_id, 'surcharge', true );                                                                                               
+      $is_active = get_post_meta( $post_id, 'is_active', true );
+      $expiry    = get_post_meta( $post_id, 'expiry_date', true );                                                                                             
+      $image     = get_the_post_thumbnail_url( $post_id, 'medium' );
+                                                                                                                                                               
+      $back_url = admin_url( 'admin.php?page=gwu-wrap-view' );
+      ?>                                                                                                                                                       
+      <div class="wrap">
+          <a href="<?php echo esc_url( $back_url ); ?>" class="page-title-action">                                                                             
+              &larr; <?php esc_html_e( 'Back to All Wraps', 'gift-wrap' ); ?>
+          </a>                                                                                                                                                 
+                  
+          <h1><?php echo esc_html( get_the_title( $post ) ); ?></h1>                                                                                           
+                                                                                                                                                               
+          <?php if ( $image ) : ?>
+              <img src="<?php echo esc_url( $image ); ?>" style="max-width:300px;">                                                                            
+          <?php endif; ?>
+
+          <table class="form-table">
+              <tr>                                                                                                                                             
+                  <th><?php esc_html_e( 'Surcharge', 'gift-wrap' ); ?></th>
+                  <td><?php echo esc_html( number_format_i18n( (float) $surcharge, 2 ) ); ?></td>                                                              
+              </tr>                                                                                                                                            
+              <tr>
+                  <th><?php esc_html_e( 'Active', 'gift-wrap' ); ?></th>                                                                                       
+                  <td><?php echo esc_html( $is_active ? 'Yes' : 'No' ); ?></td>                                                                                
+              </tr>
+              <tr>                                                                                                                                             
+                  <th><?php esc_html_e( 'Expiry', 'gift-wrap' ); ?></th>
+                  <td><?php echo esc_html( $expiry ?: '—' ); ?></td>                                                                                           
+              </tr>
+          </table>                                                                                                                                             
+                                                                                                                                                               
+          <a href="<?php echo esc_url( get_edit_post_link( $post_id ) ); ?>" class="button button-primary">
+              <?php esc_html_e( 'Edit', 'gift-wrap' ); ?>                                                                                                      
+          </a>                                                                                                                                                 
+      </div>
+<?php                                                                                                                                                    
+}   
+ 
+
+// function for rending the form inside the admin settings
+function gwu_render_admin_page() {
+?>
     <div class="wrap">
         <h1><?php echo esc_html__( 'Gift Wrap Options', 'gift-wrap' ); ?></h1>
 
@@ -110,9 +200,9 @@ function gwu_render_admin_page() {
                 <p><?php echo esc_html__( 'Wrap added successfully.', 'gift-wrap' ); ?></p>
             </div>
         <?php endif; ?>
-
+        
         <h2><?php echo esc_html__( 'Add New Wrap', 'gift-wrap' ); ?></h2>
-
+        
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             
             <?php wp_nonce_field( 'gwu_save_wrap_nonce' ); ?>

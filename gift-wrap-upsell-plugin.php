@@ -24,6 +24,7 @@ require_once GWU_PATH . 'includes/meta.php';
 require_once GWU_PATH . 'includes/rest-api.php';
 require_once GWU_PATH . 'includes/admin.php';
 require_once GWU_PATH . 'includes/enqueue.php';
+require_once GWU_PATH . 'includes/class-gwu-wraps-table.php';
 
 add_action( 'init', function () {
       load_plugin_textdomain( 'gift-wrap', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );                               
