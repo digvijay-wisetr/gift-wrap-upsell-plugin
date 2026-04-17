@@ -24,7 +24,11 @@ class GWU_Wraps_Table extends WP_List_Table {
             'surcharge' => __( 'Surcharge', 'gift-wrap' ),
             'is_active' => __( 'Active', 'gift-wrap' ),
             'expiry'    => __( 'Expiry', 'gift-wrap' ),
+            'preview'   => __( 'Preview', 'gift-wrap' ),
         ];
+    }
+    protected function column_preview( $item ) {                                                                                                                 
+      return '<div class="gwu-preview-container" id="gwu-preview-' . esc_attr( $item['id'] ) . '"></div>';
     }
 
     protected function column_title( $item ) {
@@ -46,6 +50,8 @@ class GWU_Wraps_Table extends WP_List_Table {
         $delete_url = get_delete_post_link( $post_id );
 
         $actions = [
+            'preview' => '<a href="#" class="gwu-preview-btn" data-wrap-id="' . esc_attr( $post_id ) . '">'
+                 . esc_html__( 'Preview', 'gift-wrap' ) . '</a>',  
             'view'   => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'View', 'gift-wrap' ) . '</a>',
             'edit'   => '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'gift-wrap' ) . '</a>',
             'delete' => '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'gift-wrap' ) . '</a>',
