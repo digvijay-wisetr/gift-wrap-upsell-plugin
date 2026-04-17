@@ -22,9 +22,9 @@ require_once GWU_PATH . 'includes/helpers.php';
 require_once GWU_PATH . 'includes/post-types.php';
 require_once GWU_PATH . 'includes/meta.php';
 require_once GWU_PATH . 'includes/rest-api.php';
+require_once GWU_PATH . 'includes/class-gwu-wraps-table.php';
 require_once GWU_PATH . 'includes/admin.php';
 require_once GWU_PATH . 'includes/enqueue.php';
-require_once GWU_PATH . 'includes/class-gwu-wraps-table.php';
 require_once GWU_PATH .  'includes/ajax-handler.php';
 
 add_action( 'init', function () {

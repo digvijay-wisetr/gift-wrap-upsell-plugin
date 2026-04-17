@@ -128,7 +128,9 @@ add_action( 'admin_post_gwu_save_wrap', 'gwu_handle_form_submit' );
         <?php
         $table = new GWU_Wraps_Table();                                                                                                                      
         $table->prepare_items();
-        $table->display();                                                                                                                                   
+        $table->views();  
+        $table->display();   
+                                                                                                                                      
         ?>      
     </div>
                                                                                                                                                        

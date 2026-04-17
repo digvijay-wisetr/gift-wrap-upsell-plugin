@@ -27,6 +27,7 @@ class GWU_Wraps_Table extends WP_List_Table {
             'preview'   => __( 'Preview', 'gift-wrap' ),
         ];
     }
+
     protected function column_preview( $item ) {                                                                                                                 
       return '<div class="gwu-preview-container" id="gwu-preview-' . esc_attr( $item['id'] ) . '"></div>';
     }
@@ -34,7 +35,26 @@ class GWU_Wraps_Table extends WP_List_Table {
     protected function column_title( $item ) {
 
         $post_id = $item['id'];
-        
+
+        if ( isset( $item['status'] ) && $item['status'] === 'trash' ) {                                                                                         
+                  
+          // Trashed posts get Restore and Delete Permanently                                                                                                  
+          $restore_url = wp_nonce_url(
+              admin_url( 'post.php?action=untrash&post=' . $post_id ),                                                                                         
+              'untrash-post_' . $post_id                                                                                                                       
+          );                                                                                                                                                   
+                                                                                                                                                               
+          $delete_url = get_delete_post_link( $post_id, '', true ); // true = force delete                                                                     
+                  
+          $actions = [                                                                                                                                         
+              'untrash' => '<a href="' . esc_url( $restore_url ) . '">'
+                         . esc_html__( 'Restore', 'gift-wrap' ) . '</a>',                                                                                      
+              'delete'  => '<a href="' . esc_url( $delete_url ) . '" style="color:#b32d2e;">'
+                         . esc_html__( 'Delete Permanently', 'gift-wrap' ) . '</a>',                                                                           
+          ];      
+                                                                                                                                                               
+          return esc_html( $item['title'] ) . $this->row_actions( $actions );                                                                                  
+        }
         // Points to the "View Wrap" submenu page with post_id.                                                                                                  
         // admin.php?page= routes through WP's admin page handler,
         // so the URL respects capability checks registered with add_submenu_page(). 
@@ -73,16 +93,62 @@ class GWU_Wraps_Table extends WP_List_Table {
     protected function column_expiry( $item ) {
         return esc_html( $item['expiry'] );
     }
+    
+    public function get_views() {
+          $current = isset( $_GET['post_status'] )
+              ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )                                                                                      
+              : 'all';
+                                                                                                                                                               
+          $base_url = admin_url( 'admin.php?page=gwu-wrap-view' );                                                                                             
+   
+          // Count posts by status                                                                                                                             
+          $counts = wp_count_posts( 'gift_wrap_option' );
+                                                                                                                                                               
+          $all_count   = (int) $counts->publish + (int) $counts->draft;
+          $pub_count   = (int) $counts->publish;                                                                                                               
+          $trash_count = (int) $counts->trash;                                                                                                                 
+   
+          $views = [];                                                                                                                                         
+                  
+          $views['all'] = sprintf(
+              '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+              esc_url( $base_url ),                                                                                                                            
+              $current === 'all' ? 'current' : '',
+              esc_html__( 'All', 'gift-wrap' ),                                                                                                                
+              $all_count
+          );                                                                                                                                                   
+                  
+          $views['publish'] = sprintf(                                                                                                                         
+              '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+              esc_url( add_query_arg( 'post_status', 'publish', $base_url ) ),                                                                                 
+              $current === 'publish' ? 'current' : '',                                                                                                         
+              esc_html__( 'Published', 'gift-wrap' ),
+              $pub_count                                                                                                                                       
+          );      
 
+          $views['trash'] = sprintf(
+              '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+              esc_url( add_query_arg( 'post_status', 'trash', $base_url ) ),                                                                                   
+              $current === 'trash' ? 'current' : '',
+              esc_html__( 'Trash', 'gift-wrap' ),                                                                                                              
+              $trash_count
+          );                                                                                                                                                   
+          return $views;
+    }
 
     public function prepare_items() {
         $per_page = 3;
         $current  = $this->get_pagenum();  
         // get_pagenum() reads $_GET['paged'] — WP_List_Table's built-in                                                                                         
         // pagination links set this parameter automatically.
+        
+        $status = isset( $_GET['post_status'] )
+              ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )                                                                                      
+              : 'any';
 
         $query = new WP_Query([
             'post_type'      => 'gift_wrap_option',
+            'post_status'    => $status === 'trash' ? 'trash' : [ 'publish', 'draft' ],
             'posts_per_page' => $per_page,
             'paged'          => $current, 
         ]);
@@ -96,6 +162,7 @@ class GWU_Wraps_Table extends WP_List_Table {
                 'surcharge' => (float) get_post_meta( $post->ID, 'surcharge', true ),
                 'is_active' => (bool) get_post_meta( $post->ID, 'is_active', true ),
                 'expiry'    => (string) get_post_meta( $post->ID, 'expiry_date', true ),
+                'status'    => $post->post_status, 
             ];
         }
         

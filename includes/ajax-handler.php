@@ -10,6 +10,10 @@ function gwu_ajax_preview() {
     //Verifying nonce before processing
     check_ajax_referer( 'gwu_preview_nonce', 'nonce' );
 
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( __( 'Unauthorized', 'gift-wrap' ), 403 );
+    }
+
     $wrap_id = isset( $_POST['wrap_id'] ) ? absint( $_POST['wrap_id'] ) : 0;
 
     if ( ! $wrap_id ) {
