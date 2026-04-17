@@ -65,7 +65,7 @@ jQuery(function ($) {
           return;
       }                                                                                                                                                        
                   
-      $target.html('<em>Loading...</em>');
+      $target.html('<em>' + gwuAjax.loading + '</em>');
 
       $.post(gwuAjax.ajax_url, {
           action:  'gift_wrap_preview',
@@ -78,7 +78,7 @@ jQuery(function ($) {
               $target.html('<p style="color:red;">' + response.data + '</p>');
           }                                                                                                                                                    
       }).fail(function () {
-          $target.html('<p style="color:red;">Request failed.</p>');                                                                                           
+          $target.html('<p style="color:red;">' + gwuAjax.requestFailed + '</p>');                                                                                         
       });         
   });
 

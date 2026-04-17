@@ -29,6 +29,8 @@ function gwu_admin_scripts( $hook ) {
     wp_localize_script( 'gwu-admin-js', 'gwuAjax', [
         'ajax_url' => admin_url( 'admin-ajax.php' ),
         'nonce'    => wp_create_nonce( 'gwu_preview_nonce' ),
+        'loading'       => __( 'Loading...', 'gift-wrap' ),                                                                                                                                               
+        'requestFailed' => __( 'Request failed.', 'gift-wrap' ),
     ] );
 
     wp_localize_script( 'gwu-admin-js', 'gwuAdmin', [                                                                                      

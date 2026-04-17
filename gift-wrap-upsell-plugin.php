@@ -6,6 +6,7 @@
  * Version: 1.0.0
  * Author: Digvijay Singh
  * Text Domain: gift-wrap
+ * Domain Path: /languages
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

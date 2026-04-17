@@ -175,7 +175,7 @@ function gwu_render_single_wrap( $post_id ) {
               </tr>                                                                                                                                            
               <tr>
                   <th><?php esc_html_e( 'Active', 'gift-wrap' ); ?></th>                                                                                       
-                  <td><?php echo esc_html( $is_active ? 'Yes' : 'No' ); ?></td>                                                                                
+                  <td><?php echo esc_html( $is_active ? __( 'Yes', 'gift-wrap' ) : __( 'No', 'gift-wrap' )); ?></td>                                                                                
               </tr>
               <tr>                                                                                                                                             
                   <th><?php esc_html_e( 'Expiry', 'gift-wrap' ); ?></th>
