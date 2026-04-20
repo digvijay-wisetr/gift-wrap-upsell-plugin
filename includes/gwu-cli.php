@@ -39,7 +39,8 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
             if ( $dry_run ) {
                 WP_CLI::log(  __( '--- Dry run mode ---', 'gift-wrap-upsell-plugin' ) );                                                                                                       
             }
-                                                                                                                                                            
+
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen                                                                                                                                              
             $handle = fopen( $file, 'r' );
 
             if ( ! $handle ) {              
@@ -63,7 +64,8 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
             
             $expected = [ 'title', 'surcharge', 'is_active', 'expiry_date' ];                                                                                
                 
-            if ( $header !== $expected ) {                                                                                                                   
+            if ( $header !== $expected ) {  
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose                                                                                                                 
             fclose( $handle );
             WP_CLI::error(
                 sprintf( 'Invalid header. Expected: %s | Got: %s',                                                                                                                   
@@ -77,6 +79,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
             while ( ( $row = fgetcsv( $handle ) ) !== false ) {                                                                                              
                 $rows[] = $row;                                                                                                                              
             }   
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
             fclose( $handle );
 
             if ( empty( $rows ) ) {         

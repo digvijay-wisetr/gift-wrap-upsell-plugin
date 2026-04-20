@@ -51,7 +51,7 @@ function gwu_handle_form_submit() {
 
     // 1. Capability check
     if ( ! current_user_can( 'edit_posts' ) ) {
-        wp_die( __( 'Unauthorized', 'gift-wrap-upsell-plugin' ) );
+        wp_die( esc_html__( 'Unauthorized', 'gift-wrap-upsell-plugin' ) );
         exit;
     }
 
@@ -86,7 +86,7 @@ function gwu_handle_form_submit() {
     ]);
 
     if ( is_wp_error( $post_id ) ) {
-        wp_die( __( 'Error creating wrap', 'gift-wrap-upsell-plugin' ) );
+        wp_die( esc_html__( 'Error creating wrap', 'gift-wrap-upsell-plugin' ) );
     }
     
     

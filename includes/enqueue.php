@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 add_action( 'admin_enqueue_scripts', 'gwu_admin_scripts' );
 
 function gwu_admin_scripts( $hook ) {
