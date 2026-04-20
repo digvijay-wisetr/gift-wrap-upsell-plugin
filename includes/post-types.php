@@ -6,18 +6,18 @@ function gwu_register_cpt_taxonomy() {
 
     register_post_type( 'gift_wrap_option', [
         'labels' => [
-            'name'               => __( 'Gift Wraps', 'gift-wrap' ),
-            'singular_name'      => __( 'Gift Wrap', 'gift-wrap' ),
-            'add_new'            => __( 'Add New', 'gift-wrap' ),
-            'add_new_item'       => __( 'Add New Gift Wrap', 'gift-wrap' ),
-            'edit_item'          => __( 'Edit Gift Wrap', 'gift-wrap' ),
-            'new_item'           => __( 'New Gift Wrap', 'gift-wrap' ),
-            'view_item'          => __( 'View Gift Wrap', 'gift-wrap' ),
-            'search_items'       => __( 'Search Gift Wraps', 'gift-wrap' ),
+            'name'               => __( 'Gift Wraps', 'gift-wrap-upsell-plugin' ),
+            'singular_name'      => __( 'Gift Wrap', 'gift-wrap-upsell-plugin' ),
+            'add_new'            => __( 'Add New', 'gift-wrap-upsell-plugin' ),
+            'add_new_item'       => __( 'Add New Gift Wrap', 'gift-wrap-upsell-plugin' ),
+            'edit_item'          => __( 'Edit Gift Wrap', 'gift-wrap-upsell-plugin' ),
+            'new_item'           => __( 'New Gift Wrap', 'gift-wrap-upsell-plugin' ),
+            'view_item'          => __( 'View Gift Wrap', 'gift-wrap-upsell-plugin' ),
+            'search_items'       => __( 'Search Gift Wraps', 'gift-wrap-upsell-plugin' ),
         ],
         'public'          => true,
         'has_archive'     => true,
-        'rewrite'         => [ 'slug' => 'gift-wrap' ],
+        'rewrite'         => [ 'slug' => 'gift-wrap-upsell-plugin' ],
         'show_in_rest'    => true,
         'supports'        => [ 'title', 'thumbnail','custom-fields' ],
         'menu_icon'       => 'dashicons-tickets-alt',
@@ -27,12 +27,12 @@ function gwu_register_cpt_taxonomy() {
 
     register_taxonomy( 'gift_wrap_season', 'gift_wrap_option', [
         'labels' => [
-            'name' => __( 'Seasons', 'gift-wrap' ),
+            'name' => __( 'Seasons', 'gift-wrap-upsell-plugin' ),
         ],
         'public'              => true,
         'hierarchical'        => true,
         'show_in_rest'        => true,
         'show_admin_column'   => true,
-        'rewrite'             => [ 'slug' => 'gift-wrap-season' ],
+        'rewrite'             => [ 'slug' => 'gift-wrap-upsell-plugin-season' ],
     ] );
 }

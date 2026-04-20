@@ -20,11 +20,11 @@ class GWU_Wraps_Table extends WP_List_Table {
     // we Define our columns
     public function get_columns() {
         return [
-            'title'     => __( 'Title', 'gift-wrap' ),
-            'surcharge' => __( 'Surcharge', 'gift-wrap' ),
-            'is_active' => __( 'Active', 'gift-wrap' ),
-            'expiry'    => __( 'Expiry', 'gift-wrap' ),
-            'preview'   => __( 'Preview', 'gift-wrap' ),
+            'title'     => __( 'Title', 'gift-wrap-upsell-plugin' ),
+            'surcharge' => __( 'Surcharge', 'gift-wrap-upsell-plugin' ),
+            'is_active' => __( 'Active', 'gift-wrap-upsell-plugin' ),
+            'expiry'    => __( 'Expiry', 'gift-wrap-upsell-plugin' ),
+            'preview'   => __( 'Preview', 'gift-wrap-upsell-plugin' ),
         ];
     }
 
@@ -48,9 +48,9 @@ class GWU_Wraps_Table extends WP_List_Table {
                   
           $actions = [                                                                                                                                         
               'untrash' => '<a href="' . esc_url( $restore_url ) . '">'
-                         . esc_html__( 'Restore', 'gift-wrap' ) . '</a>',                                                                                      
+                         . esc_html__( 'Restore', 'gift-wrap-upsell-plugin' ) . '</a>',                                                                                      
               'delete'  => '<a href="' . esc_url( $delete_url ) . '" style="color:#b32d2e;">'
-                         . esc_html__( 'Delete Permanently', 'gift-wrap' ) . '</a>',                                                                           
+                         . esc_html__( 'Delete Permanently', 'gift-wrap-upsell-plugin' ) . '</a>',                                                                           
           ];      
                                                                                                                                                                
           return esc_html( $item['title'] ) . $this->row_actions( $actions );                                                                                  
@@ -71,10 +71,10 @@ class GWU_Wraps_Table extends WP_List_Table {
 
         $actions = [
             'preview' => '<a href="#" class="gwu-preview-btn" data-wrap-id="' . esc_attr( $post_id ) . '">'
-                 . esc_html__( 'Preview', 'gift-wrap' ) . '</a>',  
-            'view'   => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'View', 'gift-wrap' ) . '</a>',
-            'edit'   => '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'gift-wrap' ) . '</a>',
-            'delete' => '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'gift-wrap' ) . '</a>',
+                 . esc_html__( 'Preview', 'gift-wrap-upsell-plugin' ) . '</a>',  
+            'view'   => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'View', 'gift-wrap-upsell-plugin' ) . '</a>',
+            'edit'   => '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'gift-wrap-upsell-plugin' ) . '</a>',
+            'delete' => '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'gift-wrap-upsell-plugin' ) . '</a>',
         ];
 
         // row_actions() renders the hover action links below the title,                                                                                         
@@ -115,7 +115,7 @@ class GWU_Wraps_Table extends WP_List_Table {
               '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
               esc_url( $base_url ),                                                                                                                            
               $current === 'all' ? 'current' : '',
-              esc_html__( 'All', 'gift-wrap' ),                                                                                                                
+              esc_html__( 'All', 'gift-wrap-upsell-plugin' ),                                                                                                                
               $all_count
           );                                                                                                                                                   
                   
@@ -123,7 +123,7 @@ class GWU_Wraps_Table extends WP_List_Table {
               '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
               esc_url( add_query_arg( 'post_status', 'publish', $base_url ) ),                                                                                 
               $current === 'publish' ? 'current' : '',                                                                                                         
-              esc_html__( 'Published', 'gift-wrap' ),
+              esc_html__( 'Published', 'gift-wrap-upsell-plugin' ),
               $pub_count                                                                                                                                       
           );    
           
@@ -131,7 +131,7 @@ class GWU_Wraps_Table extends WP_List_Table {
               '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
               esc_url( add_query_arg( 'post_status', 'draft', $base_url ) ),                                                                                 
               $current === 'draft' ? 'current' : '',                                                                                                         
-              esc_html__( 'Draft', 'gift-wrap' ),
+              esc_html__( 'Draft', 'gift-wrap-upsell-plugin' ),
               $draft_count                                                                                                                                      
           );      
 
@@ -140,7 +140,7 @@ class GWU_Wraps_Table extends WP_List_Table {
               '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
               esc_url( add_query_arg( 'post_status', 'trash', $base_url ) ),                                                                                   
               $current === 'trash' ? 'current' : '',
-              esc_html__( 'Trash', 'gift-wrap' ),                                                                                                              
+              esc_html__( 'Trash', 'gift-wrap-upsell-plugin' ),                                                                                                              
               $trash_count
           );                                                                                                                                                   
           return $views;

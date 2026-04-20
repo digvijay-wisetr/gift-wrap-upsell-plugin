@@ -29,13 +29,13 @@ function gwu_admin_scripts( $hook ) {
     wp_localize_script( 'gwu-admin-js', 'gwuAjax', [
         'ajax_url' => admin_url( 'admin-ajax.php' ),
         'nonce'    => wp_create_nonce( 'gwu_preview_nonce' ),
-        'loading'       => __( 'Loading...', 'gift-wrap' ),                                                                                                                                               
-        'requestFailed' => __( 'Request failed.', 'gift-wrap' ),
+        'loading'       => __( 'Loading...', 'gift-wrap-upsell-plugin' ),                                                                                                                                               
+        'requestFailed' => __( 'Request failed.', 'gift-wrap-upsell-plugin' ),
     ] );
 
     wp_localize_script( 'gwu-admin-js', 'gwuAdmin', [                                                                                      
-      'mediaTitle'    => __( 'Select Image', 'gift-wrap' ),                                                                              
-      'mediaButton'   => __( 'Use this image', 'gift-wrap' ),                                                                            
-      'invalidImage'  => __( 'Please select a valid image.', 'gift-wrap' ),                                                              
+      'mediaTitle'    => __( 'Select Image', 'gift-wrap-upsell-plugin' ),                                                                              
+      'mediaButton'   => __( 'Use this image', 'gift-wrap-upsell-plugin' ),                                                                            
+      'invalidImage'  => __( 'Please select a valid image.', 'gift-wrap-upsell-plugin' ),                                                              
   ] );
 }

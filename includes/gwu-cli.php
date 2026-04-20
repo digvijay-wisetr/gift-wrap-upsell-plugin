@@ -18,32 +18,32 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
          *
          * ## EXAMPLES
          *
-         *     wp gift-wrap import --csv=wraps.csv
-         *     wp gift-wrap import --csv=wraps.csv --dry-run
+         *     wp gift-wrap-upsell-plugin import --csv=wraps.csv
+         *     wp gift-wrap-upsell-plugin import --csv=wraps.csv --dry-run
          */                             
         public function import( $args, $assoc_args ) {
                                                                                                                                                             
             $file = $assoc_args['csv'] ?? '';
                                                                                                                                                             
             if ( empty( $file ) ) {
-                WP_CLI::error( __( 'CSV file is required. Usage: --csv=path/to/file.csv', 'gift-wrap' ) );                                                   
+                WP_CLI::error( __( 'CSV file is required. Usage: --csv=path/to/file.csv', 'gift-wrap-upsell-plugin' ) );                                                   
             }                               
                                                                                                                                                             
             if ( ! file_exists( $file ) || ! is_readable( $file ) ) {
                 /* translators: %s is the file path */
-                WP_CLI::error( sprintf( __( 'Cannot read file: %s', 'gift-wrap' ), $file ) );                                                                                                                                                                                       
+                WP_CLI::error( sprintf( __( 'Cannot read file: %s', 'gift-wrap-upsell-plugin' ), $file ) );                                                                                                                                                                                       
             }
                                                                                                                                                             
             $dry_run = isset( $assoc_args['dry-run'] );
                                                                                                                                                             
             if ( $dry_run ) {
-                WP_CLI::log(  __( '--- Dry run mode ---', 'gift-wrap' ) );                                                                                                       
+                WP_CLI::log(  __( '--- Dry run mode ---', 'gift-wrap-upsell-plugin' ) );                                                                                                       
             }
                                                                                                                                                             
             $handle = fopen( $file, 'r' );
 
             if ( ! $handle ) {              
-                WP_CLI::error( __( 'Unable to open CSV file.', 'gift-wrap' ) );
+                WP_CLI::error( __( 'Unable to open CSV file.', 'gift-wrap-upsell-plugin' ) );
             }
                                                                                                                                                             
             $header = fgetcsv( $handle ); 
@@ -80,14 +80,14 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
             fclose( $handle );
 
             if ( empty( $rows ) ) {         
-                WP_CLI::warning( __( 'CSV has no data rows.', 'gift-wrap' ) );
+                WP_CLI::warning( __( 'CSV has no data rows.', 'gift-wrap-upsell-plugin' ) );
                 return;
             }   
 
             WP_CLI::log(
                 sprintf(
                      /* translators: %d is the number of CSV rows */
-                    __( 'Total rows to process: %d', 'gift-wrap' ),
+                    __( 'Total rows to process: %d', 'gift-wrap-upsell-plugin' ),
                     count( $rows )
                 )
             );
@@ -107,7 +107,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
                                                                                                                                                             
                 if ( count( $row ) < 4 ) {
                 /* translators: %d is the CSV row number */
-                    $errors[] = sprintf( __( 'Row %d: not enough columns', 'gift-wrap' ), $row_num );                                                                                       
+                    $errors[] = sprintf( __( 'Row %d: not enough columns', 'gift-wrap-upsell-plugin' ), $row_num );                                                                                       
                     $progress->tick();      
                     continue;           
                 }
@@ -126,7 +126,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
                 if ( empty( $title ) || $price === null ) {                                                                                             
                     $errors[] = sprintf(
                         /* translators: %d is the CSV row number */ 
-                        __( 'Row %d: invalid title or price', 'gift-wrap' ),
+                        __( 'Row %d: invalid title or price', 'gift-wrap-upsell-plugin' ),
                         $row_num
                     );
                     $progress->tick();                                                                                                                       
@@ -138,7 +138,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
                     if ( ! $dt || $dt->format( 'Y-m-d' ) !== $expiry ) {                                                                                     
                         $errors[] = sprintf( 
                             /* translators: %1$d is the row number, %2$s is the invalid date string */ 
-                        __( 'Row %1$d: invalid date "%2$s", skipping date', 'gift-wrap' ), 
+                        __( 'Row %1$d: invalid date "%2$s", skipping date', 'gift-wrap-upsell-plugin' ), 
                         $row_num, $expiry );
                         $expiry = '';       
                     }                   
@@ -175,7 +175,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
                                         
                 if ( $dry_run ) {
                     /* translators: %1$s is the wrap title, %2$s is the price */
-                    WP_CLI::log( sprintf( __( '  Would import: %1$s ($%2$s)', 'gift-wrap' ), $title, $price ) );                                                                                          
+                    WP_CLI::log( sprintf( __( '  Would import: %1$s ($%2$s)', 'gift-wrap-upsell-plugin' ), $title, $price ) );                                                                                          
                     $progress->tick();                                                                                                                       
                     continue;
                 }                                                                                                                                            
@@ -188,7 +188,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
                                                                                                                                                             
                 if ( is_wp_error( $post_id ) ) {
                     /* translators: %1$d is the row number, %2$s is the wrap title */
-                    $errors[] = sprintf( __( 'Row %1$d: insert failed for "%2$s"', 'gift-wrap' ), $row_num, $title );                                                                              
+                    $errors[] = sprintf( __( 'Row %1$d: insert failed for "%2$s"', 'gift-wrap-upsell-plugin' ), $row_num, $title );                                                                              
                     $progress->tick();      
                     continue;           
                 }
@@ -204,22 +204,22 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
             $progress->finish();            
                                         
              /* translators: %d is the number of wraps imported */                                                                                                                                                 
-            $imported_msg = sprintf( _n( '%d wrap imported', '%d wraps imported', $imported, 'gift-wrap' ), $imported );                                                                                          
+            $imported_msg = sprintf( _n( '%d wrap imported', '%d wraps imported', $imported, 'gift-wrap-upsell-plugin' ), $imported );                                                                                          
             /* translators: %d is the number of wraps skipped */                                                        
-            $skipped_msg = sprintf( _n( '%d skipped', '%d skipped', $skipped, 'gift-wrap' ), $skipped );                                                                                                          
+            $skipped_msg = sprintf( _n( '%d skipped', '%d skipped', $skipped, 'gift-wrap-upsell-plugin' ), $skipped );                                                                                                          
             /* translators: %d is the number of errors */                                               
-            $errors_msg = sprintf( _n( '%d error', '%d errors', count( $errors ), 'gift-wrap' ), count( $errors ) );                                                                                              
+            $errors_msg = sprintf( _n( '%d error', '%d errors', count( $errors ), 'gift-wrap-upsell-plugin' ), count( $errors ) );                                                                                              
                                                                                                                     
             /* translators: %1$s is imported count, %2$s is skipped count, %3$s is error count */                                                                                                                 
-            WP_CLI::success( sprintf( __( 'Done. %1$s, %2$s, %3$s', 'gift-wrap' ), $imported_msg, $skipped_msg, $errors_msg ) );
+            WP_CLI::success( sprintf( __( 'Done. %1$s, %2$s, %3$s', 'gift-wrap-upsell-plugin' ), $imported_msg, $skipped_msg, $errors_msg ) );
                                                                                                                                                                                                                     
             if ( ! empty( $errors ) ) {                                                                                                                                                                           
-                WP_CLI::warning( __( 'Errors encountered:', 'gift-wrap' ) );
+                WP_CLI::warning( __( 'Errors encountered:', 'gift-wrap-upsell-plugin' ) );
                 foreach ( $errors as $error ) {                                                                                                                                                                   
                     WP_CLI::log( ' - ' . $error );                                                                                                                                                                
                 }                                 
             }
         }                                                                                                                                                    
     }                                                                                                                                                         
-    WP_CLI::add_command( 'gift-wrap', 'GWU_CLI_Command' );
+    WP_CLI::add_command( 'gift-wrap-upsell-plugin', 'GWU_CLI_Command' );
 }

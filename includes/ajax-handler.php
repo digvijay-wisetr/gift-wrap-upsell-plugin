@@ -11,19 +11,19 @@ function gwu_ajax_preview() {
     check_ajax_referer( 'gwu_preview_nonce', 'nonce' );
 
     if ( ! current_user_can( 'edit_posts' ) ) {
-        wp_send_json_error( __( 'Unauthorized', 'gift-wrap' ), 403 );
+        wp_send_json_error( __( 'Unauthorized', 'gift-wrap-upsell-plugin' ), 403 );
     }
 
     $wrap_id = isset( $_POST['wrap_id'] ) ? absint( $_POST['wrap_id'] ) : 0;
 
     if ( ! $wrap_id ) {
-        wp_send_json_error( __( 'Invalid wrap ID.', 'gift-wrap' ) );
+        wp_send_json_error( __( 'Invalid wrap ID.', 'gift-wrap-upsell-plugin' ) );
     }
 
     $post = get_post( $wrap_id );
 
     if ( ! ( $post instanceof WP_Post ) || $post->post_type !== 'gift_wrap_option' ) {
-        wp_send_json_error( __( 'Wrap not found.', 'gift-wrap' ) );
+        wp_send_json_error( __( 'Wrap not found.', 'gift-wrap-upsell-plugin' ) );
     }
 
     // Fetch data
@@ -42,7 +42,7 @@ function gwu_ajax_preview() {
         <?php endif; ?>
 
         <p>
-            <?php echo esc_html__( 'Price:', 'gift-wrap' ); ?>
+            <?php echo esc_html__( 'Price:', 'gift-wrap-upsell-plugin' ); ?>
             <?php echo esc_html( number_format_i18n( $surcharge, 2 ) ); ?>
         </p>
     </div>

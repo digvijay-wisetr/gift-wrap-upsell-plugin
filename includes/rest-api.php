@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 function gwu_register_routes() {
 
-    register_rest_route( 'gift-wrap/v1', '/options', [
+    register_rest_route( 'gift-wrap-upsell-plugin/v1', '/options', [
         'methods'  => 'GET',
         'callback' => 'gwu_get_active_wraps',
         'permission_callback' => 'gwu_rest_permission',
@@ -69,7 +69,7 @@ function gwu_validate_season( $value, WP_REST_Request $request, $param ) {
       if ( ! is_string( $value ) || $value === '' ) {                                                                                    
           return new WP_Error(
               'rest_invalid_season',                                                                                                     
-              __( 'Season must be a non-empty string.', 'gift-wrap' ),
+              __( 'Season must be a non-empty string.', 'gift-wrap-upsell-plugin' ),
               [ 'status' => 400 ]                                                                                                        
           );      
       }                                                                                                                                  
@@ -121,7 +121,7 @@ function gwu_get_active_wraps( WP_REST_Request $request ) {
     if ( empty( $query->posts ) ) {
         return new WP_Error(
             'no_wraps',
-            __( 'No active gift wraps found.', 'gift-wrap' ),
+            __( 'No active gift wraps found.', 'gift-wrap-upsell-plugin' ),
             [ 'status' => 404 ]
         );
     }

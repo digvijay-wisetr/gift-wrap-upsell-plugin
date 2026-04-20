@@ -5,7 +5,7 @@
  * Description: Adds gift wrap upsell functionality.
  * Version: 1.0.0
  * Author: Digvijay Singh
- * Text Domain: gift-wrap
+ * Text Domain: gift-wrap-upsell-plugin
  * Domain Path: /languages
  */
 
@@ -31,7 +31,7 @@ require_once GWU_PATH .  'includes/gwu-cli.php';
 require_once GWU_PATH .  'includes/cron.php';
 
 add_action( 'init', function () {
-      load_plugin_textdomain( 'gift-wrap', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );                               
+      load_plugin_textdomain( 'gift-wrap-upsell-plugin', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );                               
 } );
 
 

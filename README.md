@@ -1,1 +1,1 @@
-# gift-wrap-upsell-plugin
+# gift-wrap-upsell-plugin-upsell-plugin
