@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Gift Wrap Upsell Plugin
+ * Plugin Name: Gift Wrap Upsell
  * Description: Adds gift wrap upsell functionality.
  * Version: 1.0.0
  * Author: Digvijay Singh
@@ -32,9 +32,10 @@ require_once GWU_PATH .  'includes/ajax-handler.php';
 require_once GWU_PATH .  'includes/gwu-cli.php';
 require_once GWU_PATH .  'includes/cron.php';
 
-add_action( 'init', function () {
-      load_plugin_textdomain( 'gift-wrap-upsell-plugin', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );                               
-} );
+// This code is required before wordpress 4.6
+// add_action( 'init', function () {
+//       load_plugin_textdomain( 'gift-wrap-upsell-plugin', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );                               
+// } );
 
 
 function gwu_activate_plugin(){

@@ -65,7 +65,7 @@ function gwu_handle_form_submit() {
       wp_safe_redirect( add_query_arg( 'error', 'missing_title', $back_url ) );                                                          
       exit;                                                                                                                              
     }                                                                                                                                      
-   
+   // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- gwu_sanitize_float() casts to float and enforces min 0
     $price   = gwu_sanitize_float( wp_unslash( $_POST['surcharge'] ?? 0 ));
 
     $active  = isset( $_POST['is_active'] ) ? 1 : 0;
@@ -105,7 +105,12 @@ function gwu_handle_form_submit() {
     }
 
     // 6. Redirect
-    wp_safe_redirect( admin_url( 'admin.php?page=gwu-wraps&success=1' ) );
+    wp_safe_redirect(
+        wp_nonce_url(
+            admin_url( 'admin.php?page=gwu-wraps&success=1' ),
+            'gwu_wrap_saved'
+        )
+    );
     exit;
 }
 
@@ -118,6 +123,16 @@ add_action( 'admin_post_gwu_save_wrap', 'gwu_handle_form_submit' );
     $post_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
                                                                                                                                                                
       if ( $post_id > 0 ) {
+        // Verify nonce before rendering single wrap
+        if (
+            ! isset( $_GET['_wpnonce'] ) ||
+            ! wp_verify_nonce(
+                sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ),
+                'gwu_view_wrap_' . $post_id
+            )
+        ) {
+            wp_die( esc_html__( 'Security check failed.', 'gift-wrap-upsell-plugin' ) );
+        }
           gwu_render_single_wrap( $post_id );
           return;                                                                                                                                              
       }                                                                                                                                                    
@@ -193,11 +208,24 @@ function gwu_render_single_wrap( $post_id ) {
 
 // function for rending the form inside the admin settings
 function gwu_render_admin_page() {
+    // ✅ Verify nonce before reading $_GET
+    $show_success = false;
+
+    if (
+        isset( $_GET['success'], $_GET['_wpnonce'] ) &&
+        '1' === $_GET['success'] &&
+        wp_verify_nonce(
+            sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ),
+            'gwu_wrap_saved'
+        )
+    ) {
+        $show_success = true;
+    }
 ?>
     <div class="wrap">
         <h1><?php echo esc_html__( 'Gift Wrap Options', 'gift-wrap-upsell-plugin' ); ?></h1>
 
-        <?php if ( isset( $_GET['success'] )  && $_GET['success'] === '1' ): ?>
+        <?php if ( $show_success ) : ?>
             <div class="notice notice-success">
                 <p><?php echo esc_html__( 'Wrap added successfully.', 'gift-wrap-upsell-plugin' ); ?></p>
             </div>

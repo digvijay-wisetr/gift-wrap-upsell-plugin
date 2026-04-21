@@ -96,7 +96,9 @@ function gwu_get_active_wraps( WP_REST_Request $request ) {
         'paged'                  => $page,                                                                                        
         'update_post_term_cache' => false,
         'meta_query'             => [                                                                                                  
-            [                                                                                                                          
+            [    
+                // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                // Row count will remain low — full table scan cost is acceptable here.                                                                                                               
                 // update_post_meta stores booleans as string '1' — match the storage format.
                 'key'     => 'is_active',                                                                                            
                 'value'   => '1', 

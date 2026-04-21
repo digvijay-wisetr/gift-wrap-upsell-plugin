@@ -1,4 +1,4 @@
-# gift-wrap-upsell-plugin-upsell-plugin
+# gift-wrap-upsell-plugin-upsell
 
 # Gift Wrap Upsell Plugin (Phase A)
 

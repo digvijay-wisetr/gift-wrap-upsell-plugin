@@ -60,7 +60,8 @@ class GWU_Wraps_Table extends WP_List_Table {
         // so the URL respects capability checks registered with add_submenu_page(). 
         $view_url = add_query_arg([
             'page' => 'gwu-wrap-view',
-            'post_id' => $post_id
+            'post_id' => $post_id,
+            '_wpnonce' => wp_create_nonce( 'gwu_view_wrap_' . $post_id ),
         ], admin_url('admin.php'));
         
         // get_edit_post_link() and get_delete_post_link() return URLs that                                                                                      
@@ -95,114 +96,125 @@ class GWU_Wraps_Table extends WP_List_Table {
     }
     
     public function get_views() {
-          $current = isset( $_GET['post_status'] )
-              ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )                                                                                      
-              : 'all';
-                                                                                                                                                               
-          $base_url = admin_url( 'admin.php?page=gwu-wrap-view' );                                                                                             
-   
-          // Count posts by status                                                                                                                             
-          $counts = wp_count_posts( 'gift_wrap_option' );
-                                                                                                                                                               
-          $all_count   = (int) $counts->publish + (int) $counts->draft;
-          $pub_count   = (int) $counts->publish;     
-          $draft_count = (int) $counts->draft;                                                                                                          
-          $trash_count = (int) $counts->trash;                                                                                                                 
-   
-          $views = [];                                                                                                                                         
-                  
-          $views['all'] = sprintf(
-              '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-              esc_url( $base_url ),                                                                                                                            
-              $current === 'all' ? 'current' : '',
-              esc_html__( 'All', 'gift-wrap-upsell-plugin' ),                                                                                                                
-              $all_count
-          );                                                                                                                                                   
-                  
-          $views['publish'] = sprintf(                                                                                                                         
-              '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-              esc_url( add_query_arg( 'post_status', 'publish', $base_url ) ),                                                                                 
-              $current === 'publish' ? 'current' : '',                                                                                                         
-              esc_html__( 'Published', 'gift-wrap-upsell-plugin' ),
-              $pub_count                                                                                                                                       
-          );    
-          
-           $views['draft'] = sprintf(                                                                                                                         
-              '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-              esc_url( add_query_arg( 'post_status', 'draft', $base_url ) ),                                                                                 
-              $current === 'draft' ? 'current' : '',                                                                                                         
-              esc_html__( 'Draft', 'gift-wrap-upsell-plugin' ),
-              $draft_count                                                                                                                                      
-          );      
 
+        if ( isset( $_GET['_wpnonce'] ) &&
+            ! wp_verify_nonce(
+                sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ),
+                'gwu_list_wraps'
+            )
+        ) {
+            wp_die( esc_html__( 'Security check failed.', 'gift-wrap-upsell-plugin' ) );
+        }
 
-          $views['trash'] = sprintf(
-              '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-              esc_url( add_query_arg( 'post_status', 'trash', $base_url ) ),                                                                                   
-              $current === 'trash' ? 'current' : '',
-              esc_html__( 'Trash', 'gift-wrap-upsell-plugin' ),                                                                                                              
-              $trash_count
-          );                                                                                                                                                   
-          return $views;
-    }
-
-    public function prepare_items() {
-        $per_page = 5;
-        $current  = $this->get_pagenum();  
-        // get_pagenum() reads $_GET['paged'] — WP_List_Table's built-in                                                                                         
-        // pagination links set this parameter automatically.
-        $allowed_statuses = [ 'publish', 'draft', 'trash' ];
-
-        $status = isset( $_GET['post_status'] )
+        $current  = isset( $_GET['post_status'] )
             ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )
             : 'all';
 
-        // If a specific valid status is selected, use it. Otherwise show publish + draft.
-        if ( in_array( $status, $allowed_statuses, true ) ) {
-            $post_status = $status;
-        } else {
-            $post_status = [ 'publish', 'draft' ];
-        }
-        
-        // $status = isset( $_GET['post_status'] )
-        //       ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )                                                                                      
-        //       : 'any';
+        $base_url = admin_url( 'admin.php?page=gwu-wraps' );
+        $nonce    = wp_create_nonce( 'gwu_list_wraps' );
 
-        $query = new WP_Query([
-            'post_type'      => 'gift_wrap_option',
-            'post_status'    =>  $post_status,
-            'posts_per_page' => $per_page,
-            'paged'          => $current, 
-        ]);
+        $counts      = wp_count_posts( 'gift_wrap_option' );
+        $all_count   = (int) $counts->publish + (int) $counts->draft;
+        $pub_count   = (int) $counts->publish;
+        $draft_count = (int) $counts->draft;
+        $trash_count = (int) $counts->trash;
 
-        $data = [];
+        $views = [];
 
-        foreach ( $query->posts as $post ) {
-            $data[] = [
-                'id'        => $post->ID,
-                'title'     => get_the_title( $post ),
-                'surcharge' => (float) get_post_meta( $post->ID, 'surcharge', true ),
-                'is_active' => (bool) get_post_meta( $post->ID, 'is_active', true ),
-                'expiry'    => (string) get_post_meta( $post->ID, 'expiry_date', true ),
-                'status'    => $post->post_status, 
-            ];
-        }
-        
+        $views['all'] = sprintf(
+            '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+            esc_url( add_query_arg( [ '_wpnonce' => $nonce ], $base_url ) ),
+            $current === 'all' ? 'current' : '',
+            esc_html__( 'All', 'gift-wrap-upsell-plugin' ),
+            $all_count
+        );
 
-        // Three arrays: [visible columns, hidden columns, sortable columns].                                                                                    
-        // Hidden columns (2nd array) are columns registered in get_columns()
-        // but not displayed in the table — WP_List_Table lets users toggle                                                                                      
-        // them via Screen Options. Empty array means all columns are visible.                                                                                   
-        // Sortable columns (3rd array) would map column keys to orderby values —                                                                                
-        // empty for now since we're not supporting click-to-sort yet. 
-        $this->items = $data;
+        $views['publish'] = sprintf(
+            '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+            esc_url( add_query_arg( [ 'post_status' => 'publish', '_wpnonce' => $nonce ], $base_url ) ),
+            $current === 'publish' ? 'current' : '',
+            esc_html__( 'Published', 'gift-wrap-upsell-plugin' ),
+            $pub_count
+        );
 
-        $this->_column_headers = [ $this->get_columns(), [], [] ];
+        $views['draft'] = sprintf(
+            '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+            esc_url( add_query_arg( [ 'post_status' => 'draft', '_wpnonce' => $nonce ], $base_url ) ),
+            $current === 'draft' ? 'current' : '',
+            esc_html__( 'Draft', 'gift-wrap-upsell-plugin' ),
+            $draft_count
+        );
 
-        $this->set_pagination_args([                                                                                                                             
-          'total_items' => $query->found_posts,
-          'per_page'    => $per_page,                                                                                                                          
-        ]);
+        $views['trash'] = sprintf(
+            '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+            esc_url( add_query_arg( [ 'post_status' => 'trash', '_wpnonce' => $nonce ], $base_url ) ),
+            $current === 'trash' ? 'current' : '',
+            esc_html__( 'Trash', 'gift-wrap-upsell-plugin' ),
+            $trash_count
+        );
+
+        return $views;
+    }
+
+    public function prepare_items() {
+
+            if ( isset( $_GET['_wpnonce'] ) &&
+                ! wp_verify_nonce(
+                    sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ),
+                    'gwu_list_wraps'
+                )
+            ) {
+                wp_die( esc_html__( 'Security check failed.', 'gift-wrap-upsell-plugin' ) );
+            }
+
+            $per_page         = 5;
+            $current          = $this->get_pagenum();
+            // get_pagenum() reads $_GET['paged'] — WP_List_Table's built-in                                                                                         
+            // pagination links set this parameter automatically.
+            $allowed_statuses = [ 'publish', 'draft', 'trash' ];
+
+            $status = isset( $_GET['post_status'] )
+                ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) )
+                : 'all';
+
+            $post_status = in_array( $status, $allowed_statuses, true )
+                ? $status
+                : [ 'publish', 'draft' ];
+
+            $query = new WP_Query([
+                'post_type'      => 'gift_wrap_option',
+                'post_status'    => $post_status,
+                'posts_per_page' => $per_page,
+                'paged'          => $current,
+            ]);
+
+            $data = [];
+
+            foreach ( $query->posts as $post ) {
+                $data[] = [
+                    'id'        => $post->ID,
+                    'title'     => get_the_title( $post ),
+                    'surcharge' => (float) get_post_meta( $post->ID, 'surcharge', true ),
+                    'is_active' => (bool) get_post_meta( $post->ID, 'is_active', true ),
+                    'expiry'    => (string) get_post_meta( $post->ID, 'expiry_date', true ),
+                    'status'    => $post->post_status,
+                ];
+            }
+
+            // Three arrays: [visible columns, hidden columns, sortable columns].                                                                                    
+            // Hidden columns (2nd array) are columns registered in get_columns()
+            // but not displayed in the table — WP_List_Table lets users toggle                                                                                      
+            // them via Screen Options. Empty array means all columns are visible.                                                                                   
+            // Sortable columns (3rd array) would map column keys to orderby values —                                                                                
+            // empty for now since we're not supporting click-to-sort yet. 
+
+            $this->items           = $data;
+            $this->_column_headers = [ $this->get_columns(), [], [] ];
+
+            $this->set_pagination_args([
+                'total_items' => $query->found_posts,
+                'per_page'    => $per_page,
+            ]);
     }
       
 }
