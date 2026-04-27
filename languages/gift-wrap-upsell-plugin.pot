@@ -1,0 +1,328 @@
+# Copyright (C) 2026 Digvijay Singh
+# This file is distributed under the same license as the Gift Wrap Upsell Plugin plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Gift Wrap Upsell Plugin 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/gift-wrap-upsell-plugin\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-04-20T09:42:13+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: gift-wrap-upsell-plugin\n"
+
+#. Plugin Name of the plugin
+#: gift-wrap-upsell-plugin.php
+msgid "Gift Wrap Upsell Plugin"
+msgstr ""
+
+#. Description of the plugin
+#: gift-wrap-upsell-plugin.php
+msgid "Adds gift wrap upsell functionality."
+msgstr ""
+
+#. Author of the plugin
+#: gift-wrap-upsell-plugin.php
+msgid "Digvijay Singh"
+msgstr ""
+
+#: includes/admin.php:7
+#: includes/admin.php:8
+msgid "Manage Wraps"
+msgstr ""
+
+#: includes/admin.php:20
+#: includes/admin.php:21
+msgid "All Wraps"
+msgstr ""
+
+#: includes/admin.php:54
+#: includes/admin.php:144
+#: includes/ajax-handler.php:14
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/admin.php:89
+msgid "Error creating wrap"
+msgstr ""
+
+#: includes/admin.php:127
+msgid "All Gift Wraps"
+msgstr ""
+
+#: includes/admin.php:150
+#: includes/ajax-handler.php:26
+msgid "Wrap not found."
+msgstr ""
+
+#: includes/admin.php:162
+msgid "Back to All Wraps"
+msgstr ""
+
+#: includes/admin.php:173
+#: includes/admin.php:220
+#: includes/class-gwu-wraps-table.php:24
+msgid "Surcharge"
+msgstr ""
+
+#: includes/admin.php:177
+#: includes/admin.php:225
+#: includes/class-gwu-wraps-table.php:25
+msgid "Active"
+msgstr ""
+
+#: includes/admin.php:178
+msgid "Yes"
+msgstr ""
+
+#: includes/admin.php:178
+msgid "No"
+msgstr ""
+
+#: includes/admin.php:181
+#: includes/class-gwu-wraps-table.php:26
+msgid "Expiry"
+msgstr ""
+
+#: includes/admin.php:187
+#: includes/class-gwu-wraps-table.php:76
+msgid "Edit"
+msgstr ""
+
+#: includes/admin.php:198
+msgid "Gift Wrap Options"
+msgstr ""
+
+#: includes/admin.php:202
+msgid "Wrap added successfully."
+msgstr ""
+
+#: includes/admin.php:206
+msgid "Add New Wrap"
+msgstr ""
+
+#: includes/admin.php:215
+#: includes/class-gwu-wraps-table.php:23
+msgid "Title"
+msgstr ""
+
+#: includes/admin.php:230
+msgid "Expiry Date"
+msgstr ""
+
+#: includes/admin.php:234
+msgid "Image"
+msgstr ""
+
+#: includes/admin.php:239
+#: includes/enqueue.php:37
+msgid "Select Image"
+msgstr ""
+
+#: includes/admin.php:243
+msgid "Remove Image"
+msgstr ""
+
+#: includes/admin.php:251
+msgid "Save Wrap"
+msgstr ""
+
+#: includes/ajax-handler.php:20
+msgid "Invalid wrap ID."
+msgstr ""
+
+#: includes/ajax-handler.php:45
+msgid "Price:"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:27
+#: includes/class-gwu-wraps-table.php:74
+msgid "Preview"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:51
+msgid "Restore"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:53
+msgid "Delete Permanently"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:75
+msgid "View"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:77
+msgid "Delete"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:118
+msgid "All"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:126
+msgid "Published"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:134
+msgid "Draft"
+msgstr ""
+
+#: includes/class-gwu-wraps-table.php:143
+msgid "Trash"
+msgstr ""
+
+#: includes/enqueue.php:32
+msgid "Loading..."
+msgstr ""
+
+#: includes/enqueue.php:33
+msgid "Request failed."
+msgstr ""
+
+#: includes/enqueue.php:38
+msgid "Use this image"
+msgstr ""
+
+#: includes/enqueue.php:39
+msgid "Please select a valid image."
+msgstr ""
+
+#: includes/gwu-cli.php:29
+msgid "CSV file is required. Usage: --csv=path/to/file.csv"
+msgstr ""
+
+#. translators: %s is the file path
+#: includes/gwu-cli.php:34
+#, php-format
+msgid "Cannot read file: %s"
+msgstr ""
+
+#: includes/gwu-cli.php:40
+msgid "--- Dry run mode ---"
+msgstr ""
+
+#: includes/gwu-cli.php:46
+msgid "Unable to open CSV file."
+msgstr ""
+
+#: includes/gwu-cli.php:83
+msgid "CSV has no data rows."
+msgstr ""
+
+#. translators: %d is the number of CSV rows
+#: includes/gwu-cli.php:90
+#, php-format
+msgid "Total rows to process: %d"
+msgstr ""
+
+#. translators: %d is the CSV row number
+#: includes/gwu-cli.php:110
+#, php-format
+msgid "Row %d: not enough columns"
+msgstr ""
+
+#. translators: %d is the CSV row number
+#: includes/gwu-cli.php:129
+#, php-format
+msgid "Row %d: invalid title or price"
+msgstr ""
+
+#. translators: %1$d is the row number, %2$s is the invalid date string
+#: includes/gwu-cli.php:141
+#, php-format
+msgid "Row %1$d: invalid date \"%2$s\", skipping date"
+msgstr ""
+
+#. translators: %1$s is the wrap title, %2$s is the price
+#: includes/gwu-cli.php:178
+#, php-format
+msgid "  Would import: %1$s ($%2$s)"
+msgstr ""
+
+#. translators: %1$d is the row number, %2$s is the wrap title
+#: includes/gwu-cli.php:191
+#, php-format
+msgid "Row %1$d: insert failed for \"%2$s\""
+msgstr ""
+
+#. translators: %d is the number of wraps imported
+#: includes/gwu-cli.php:207
+#, php-format
+msgid "%d wrap imported"
+msgid_plural "%d wraps imported"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d is the number of wraps skipped
+#: includes/gwu-cli.php:209
+#, php-format
+msgid "%d skipped"
+msgid_plural "%d skipped"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d is the number of errors
+#: includes/gwu-cli.php:211
+#, php-format
+msgid "%d error"
+msgid_plural "%d errors"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %1$s is imported count, %2$s is skipped count, %3$s is error count
+#: includes/gwu-cli.php:214
+#, php-format
+msgid "Done. %1$s, %2$s, %3$s"
+msgstr ""
+
+#: includes/gwu-cli.php:217
+msgid "Errors encountered:"
+msgstr ""
+
+#: includes/post-types.php:9
+msgid "Gift Wraps"
+msgstr ""
+
+#: includes/post-types.php:10
+msgid "Gift Wrap"
+msgstr ""
+
+#: includes/post-types.php:11
+msgid "Add New"
+msgstr ""
+
+#: includes/post-types.php:12
+msgid "Add New Gift Wrap"
+msgstr ""
+
+#: includes/post-types.php:13
+msgid "Edit Gift Wrap"
+msgstr ""
+
+#: includes/post-types.php:14
+msgid "New Gift Wrap"
+msgstr ""
+
+#: includes/post-types.php:15
+msgid "View Gift Wrap"
+msgstr ""
+
+#: includes/post-types.php:16
+msgid "Search Gift Wraps"
+msgstr ""
+
+#: includes/post-types.php:30
+msgid "Seasons"
+msgstr ""
+
+#: includes/rest-api.php:72
+msgid "Season must be a non-empty string."
+msgstr ""
+
+#: includes/rest-api.php:124
+msgid "No active gift wraps found."
+msgstr ""
