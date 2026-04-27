@@ -31,6 +31,7 @@ require_once GWU_PATH . 'includes/enqueue.php';
 require_once GWU_PATH .  'includes/ajax-handler.php';
 require_once GWU_PATH .  'includes/gwu-cli.php';
 require_once GWU_PATH .  'includes/cron.php';
+require_once GWU_PATH .  'includes/checkout.php';
 
 // This code is required before wordpress 4.6
 // add_action( 'init', function () {
