@@ -81,5 +81,4 @@ jQuery(function ($) {
           $target.html('<p style="color:red;">' + gwuAjax.requestFailed + '</p>');                                                                                         
       });         
   });
-
 });

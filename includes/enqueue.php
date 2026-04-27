@@ -43,3 +43,26 @@ function gwu_admin_scripts( $hook ) {
       'invalidImage'  => __( 'Please select a valid image.', 'gift-wrap-upsell-plugin' ),                                                              
   ] );
 }
+
+// In your gwu_admin_scripts or a new frontend enqueue function
+add_action( 'wp_enqueue_scripts', 'gwu_frontend_scripts' );
+
+function gwu_frontend_scripts() {
+    if ( ! is_checkout() ) {
+        return;
+    }
+
+    wp_enqueue_style(
+        'gwu-frontend-css',
+        GWU_URL . 'assets/css/frontend.css',
+        [],
+        GWU_VERSION
+    );
+    wp_enqueue_script(
+        'gwu-frontend-js',
+        GWU_URL . 'assets/js/frontend.js',
+        [ 'jquery' ],
+        GWU_VERSION,
+        true
+    );
+}
