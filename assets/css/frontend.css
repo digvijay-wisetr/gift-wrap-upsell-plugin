@@ -1,0 +1,82 @@
+/* Gift wrap card selector */
+.gwu-field label { display: block; margin-bottom: .6em; font-weight: 600; }
+
+.gwu-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: .5em;
+}
+
+.gwu-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color .2s, box-shadow .2s;
+    background: #fff;
+    text-align: center;
+}
+
+.gwu-card:hover {
+    border-color: #96588a;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+.gwu-card--selected {
+    border-color: #96588a;
+    box-shadow: 0 0 0 3px rgba(150,88,138,.2);
+}
+
+.gwu-card__image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.gwu-card__image--placeholder {
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gwu-card__body { width: 100%; }
+
+.gwu-card__title {
+    display: block;
+    font-size: .8em;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.gwu-card__price {
+    display: block;
+    font-size: .8em;
+    color: #96588a;
+    font-weight: 700;
+}
+
+.gwu-card--none {
+    justify-content: center;
+    min-height: 100px;
+    color: #767676;
+    font-size: .85em;
+}
+
+/* Thank-you page */
+.gwu-thankyou { margin-top: 2em; }
+.gwu-thankyou h2 { font-size: 1.2em; margin-bottom: .75em; }
+.gwu-thankyou__image img { max-width: 80px; border-radius: 4px; }
+
+/* Admin metabox */
+.gwu-metabox img { max-width: 100%; border-radius: 4px; margin-bottom: .5em; }
+.gwu-metabox p { margin: .4em 0; }
