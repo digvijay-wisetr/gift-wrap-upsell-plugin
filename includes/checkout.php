@@ -337,3 +337,16 @@ function gwu_handle_order_status_changed( $order_id, $old_status, $new_status, $
     $order->update_meta_data( '_gwu_wrap_processing_noted', '1' );
     $order->save();
 }
+
+/**
+ * Multi-currency surcharge display.
+ * Hooks CURCY (WooMultiCurrency) if active; YITH is similar.
+ */
+add_filter( 'wmc_price', 'gwu_convert_surcharge_display', 10, 2 );
+
+function gwu_convert_surcharge_display( $converted_price, $original_price ) {
+    // CURCY applies wmc_price to every price — we let it do its thing.
+    // The fee added in gwu_apply_wrap_fee() goes through the same filter
+    // automatically because WC fees pass through wc_price().
+    return $converted_price;
+}

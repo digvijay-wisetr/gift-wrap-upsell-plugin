@@ -33,6 +33,18 @@ function gwu_register_routes() {
               ],
         ],
     ] );
+
+    register_rest_route( 'gift-wrap-upsell-plugin/v1', '/webhook/shipped', [
+        'methods'             => 'POST',
+        'callback'            => 'gwu_handle_shipped_webhook',
+        'permission_callback' => 'gwu_webhook_permission',
+        'args'                => [
+            'event_id'  => [ 'required' => true,  'sanitize_callback' => 'sanitize_text_field' ],
+            'order_id'  => [ 'required' => true,  'sanitize_callback' => 'absint' ],
+            'wrap_id'   => [ 'required' => true,  'sanitize_callback' => 'absint' ],
+            'tracking'  => [ 'required' => false, 'sanitize_callback' => 'sanitize_text_field' ],
+        ],
+    ] );
 }
 
 add_action( 'rest_api_init', 'gwu_register_routes' );
@@ -161,4 +173,40 @@ function gwu_get_active_wraps( WP_REST_Request $request ) {
         ],
         200
     );
+}
+
+function gwu_webhook_permission( WP_REST_Request $request ) {
+    // In a real integration: verify a shared secret header
+    // For the mock: allow any authenticated request
+    return current_user_can( 'manage_woocommerce' );
+}
+
+function gwu_handle_shipped_webhook( WP_REST_Request $request ) {
+    $logger   = wc_get_logger();
+    $context  = [ 'source' => 'gift-wrap' ];
+    $event_id = $request->get_param( 'event_id' );
+    $order_id = $request->get_param( 'order_id' );
+
+    // Deduplication — store seen event IDs with TTL (24 hours)
+    $dedup_key = 'gwu_webhook_event_' . md5( $event_id );
+    if ( get_transient( $dedup_key ) ) {
+        $logger->info( 'Duplicate webhook event: ' . $event_id, $context );
+        return new WP_REST_Response( [ 'status' => 'duplicate' ], 409 );
+    }
+
+    $order = wc_get_order( $order_id );
+    if ( ! $order ) {
+        return new WP_REST_Response( [ 'status' => 'order_not_found' ], 404 );
+    }
+
+    // Mark shipped — HPOS safe, idempotent
+    $order->update_meta_data( '_gwu_wrap_shipped', '1' );
+    $order->update_meta_data( '_gwu_wrap_tracking', $request->get_param( 'tracking' ) ?? '' );
+    $order->save();
+
+    // Record event ID so replays are no-ops
+    set_transient( $dedup_key, '1', DAY_IN_SECONDS );
+
+    $logger->info( 'Wrap shipped for order ' . $order_id . ', event ' . $event_id, $context );
+    return new WP_REST_Response( [ 'status' => 'ok' ], 200 );
 }
