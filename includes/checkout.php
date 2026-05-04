@@ -156,6 +156,14 @@ function gwu_save_wrap_to_order( $order ) {
     $order->update_meta_data( '_gwu_wrap_id', $wrap_id );
     $order->save();
 
+    $current_currency = get_woocommerce_currency();
+    $order->update_meta_data( '_gwu_wrap_currency', $current_currency );
+    // If CURCY is active, store the rate too:
+    if ( function_exists( 'wmc_get_price' ) ) {
+        $order->update_meta_data( '_gwu_wrap_exchange_rate', wmc_get_price( 1 ) );
+    }
+
+
     WC()->session->set( 'gwu_wrap_id', 0 );
 }
 
