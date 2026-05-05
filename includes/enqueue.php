@@ -44,10 +44,13 @@ function gwu_admin_scripts( $hook ) {
   ] );
 }
 
-// In your gwu_admin_scripts or a new frontend enqueue function
+/**
+ * Frontend scripts and styles — only on checkout.
+ */
 add_action( 'wp_enqueue_scripts', 'gwu_frontend_scripts' );
 
 function gwu_frontend_scripts() {
+
     if ( ! is_checkout() ) {
         return;
     }
@@ -55,14 +58,19 @@ function gwu_frontend_scripts() {
     wp_enqueue_style(
         'gwu-frontend-css',
         GWU_URL . 'assets/css/frontend.css',
-        [],
+        [ 'woocommerce-layout' ],
         GWU_VERSION
     );
+
     wp_enqueue_script(
         'gwu-frontend-js',
         GWU_URL . 'assets/js/frontend.js',
-        [ 'jquery' ],
+        [ 'jquery', 'wc-checkout' ],
         GWU_VERSION,
         true
     );
+
+    wp_localize_script( 'gwu-frontend-js', 'gwuI18n', [
+        'noWrap' => __( 'No gift wrap', 'gift-wrap-upsell-plugin' ),
+    ] );
 }

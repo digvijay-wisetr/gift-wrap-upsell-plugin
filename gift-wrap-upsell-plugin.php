@@ -32,6 +32,7 @@ require_once GWU_PATH .  'includes/ajax-handler.php';
 require_once GWU_PATH .  'includes/gwu-cli.php';
 require_once GWU_PATH .  'includes/cron.php';
 require_once GWU_PATH .  'includes/checkout.php';
+require_once GWU_PATH .  'includes/picklist.php';
 
 // This code is required before wordpress 4.6
 // add_action( 'init', function () {
@@ -43,7 +44,13 @@ function gwu_activate_plugin(){
     gwu_register_cpt_taxonomy();
     
     if ( ! wp_next_scheduled( 'gwu_daily_expiry_check' ) ) {
-        wp_schedule_event( time(), 'daily', 'gwu_daily_expiry_check' );
+        if ( ! as_has_scheduled_action( 'gwu_daily_expiry_check' ) ) {
+            as_schedule_recurring_action( time(), DAY_IN_SECONDS, 'gwu_daily_expiry_check', [], 'gift-wrap' );
+        }
+        if ( ! as_has_scheduled_action( 'gwu_generate_picklist' ) ) {
+            as_schedule_recurring_action( strtotime( 'tomorrow 06:00' ), DAY_IN_SECONDS, 'gwu_generate_picklist', [], 'gift-wrap' );
+        }
+        //wp_schedule_event( time(), 'daily', 'gwu_daily_expiry_check' );
     }
 
     flush_rewrite_rules();
@@ -53,7 +60,9 @@ register_activation_hook(__FILE__,'gwu_activate_plugin');
 
 
 function gwu_deactivate_plugin(){
-    wp_clear_scheduled_hook( 'gwu_daily_expiry_check' );
+    as_unschedule_all_actions( 'gwu_daily_expiry_check', [], 'gift-wrap' );
+    as_unschedule_all_actions( 'gwu_generate_picklist', [], 'gift-wrap' );
+   // wp_clear_scheduled_hook( 'gwu_daily_expiry_check' );
     flush_rewrite_rules();
 }
 register_deactivation_hook(__FILE__,'gwu_deactivate_plugin');
@@ -67,10 +76,10 @@ add_action('init', 'gwu_register_meta');
 
 // We add this  wp_next_scheduled prevents duplicate scheduling. 
 // It just ensures the cron always exists regardless of how the plugin was activated.
-add_action( 'init', 'gwu_next_scheduled');
+// add_action( 'init', 'gwu_next_scheduled');
                                                                                                                                                                                                        
-function gwu_next_scheduled(){
-    if ( ! wp_next_scheduled( 'gwu_daily_expiry_check' ) ) {                                                                                                                                          
-          wp_schedule_event( time(), 'daily', 'gwu_daily_expiry_check' );
-    }
-}
+// function gwu_next_scheduled(){
+//     if ( ! wp_next_scheduled( 'gwu_daily_expiry_check' ) ) {                                                                                                                                          
+//           wp_schedule_event( time(), 'daily', 'gwu_daily_expiry_check' );
+//     }
+// }

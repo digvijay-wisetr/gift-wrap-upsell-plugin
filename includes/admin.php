@@ -208,7 +208,18 @@ function gwu_render_single_wrap( $post_id ) {
 
 // function for rending the form inside the admin settings
 function gwu_render_admin_page() {
-    // ✅ Verify nonce before reading $_GET
+
+    // Show add-new form only when explicitly requested
+    $action = isset( $_GET['action'] ) 
+        ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) 
+        : '';
+
+    if ( $action === 'add_new' ) {
+        gwu_render_add_new_form();
+        return;
+    }
+
+    // Default — show the list table
     $show_success = false;
 
     if (
@@ -221,63 +232,81 @@ function gwu_render_admin_page() {
     ) {
         $show_success = true;
     }
-?>
+
+    $table = new GWU_Wraps_Table();
+    $table->prepare_items();
+    ?>
     <div class="wrap">
-        <h1><?php echo esc_html__( 'Gift Wrap Options', 'gift-wrap-upsell-plugin' ); ?></h1>
+        <h1 class="wp-heading-inline">
+            <?php esc_html_e( 'Gift Wrap Options', 'gift-wrap-upsell-plugin' ); ?>
+        </h1>
+        <a href="<?php echo esc_url( add_query_arg( 'action', 'add_new', admin_url( 'admin.php?page=gwu-wraps' ) ) ); ?>" 
+           class="page-title-action">
+            <?php esc_html_e( 'Add New', 'gift-wrap-upsell-plugin' ); ?>
+        </a>
+        <hr class="wp-header-end">
 
         <?php if ( $show_success ) : ?>
-            <div class="notice notice-success">
-                <p><?php echo esc_html__( 'Wrap added successfully.', 'gift-wrap-upsell-plugin' ); ?></p>
+            <div class="notice notice-success is-dismissible">
+                <p><?php esc_html_e( 'Wrap added successfully.', 'gift-wrap-upsell-plugin' ); ?></p>
             </div>
         <?php endif; ?>
-        
-        <h2><?php echo esc_html__( 'Add New Wrap', 'gift-wrap-upsell-plugin' ); ?></h2>
-        
+
+        <?php
+        $table->views();
+        $table->display();
+        ?>
+    </div>
+    <?php
+}
+
+// Extracted add-new form into its own function — cleaner separation
+function gwu_render_add_new_form() {
+    ?>
+    <div class="wrap">
+        <h1><?php esc_html_e( 'Add New Wrap', 'gift-wrap-upsell-plugin' ); ?></h1>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=gwu-wraps' ) ); ?>" 
+           class="page-title-action">
+            &larr; <?php esc_html_e( 'Back to list', 'gift-wrap-upsell-plugin' ); ?>
+        </a>
+
         <form method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-            
             <?php wp_nonce_field( 'gwu_save_wrap_nonce' ); ?>
             <input type="hidden" name="action" value="gwu_save_wrap">
 
             <table class="form-table">
                 <tr>
-                    <th><label for="gwu_title"><?php echo esc_html__( 'Title', 'gift-wrap-upsell-plugin' ); ?></label></th>
-                    <td><input id="gwu_title" type="text" name="title"  value="" required></td>
+                    <th><label for="gwu_title"><?php esc_html_e( 'Title', 'gift-wrap-upsell-plugin' ); ?></label></th>
+                    <td><input id="gwu_title" type="text" name="title" value="" required></td>
                 </tr>
-
                 <tr>
-                    <th><label for="gwu_surcharge"><?php echo esc_html__( 'Surcharge', 'gift-wrap-upsell-plugin' ); ?></label></th>
+                    <th><label for="gwu_surcharge"><?php esc_html_e( 'Surcharge', 'gift-wrap-upsell-plugin' ); ?></label></th>
                     <td><input id="gwu_surcharge" type="number" name="surcharge" step="0.01"></td>
                 </tr>
-
                 <tr>
-                    <th><label for="is_active"><?php echo esc_html__( 'Active', 'gift-wrap-upsell-plugin' ); ?></label></th>
+                    <th><label for="is_active"><?php esc_html_e( 'Active', 'gift-wrap-upsell-plugin' ); ?></label></th>
                     <td><input id="is_active" type="checkbox" name="is_active"></td>
                 </tr>
-
                 <tr>
-                    <th><label for="expiry_date"><?php echo esc_html__( 'Expiry Date', 'gift-wrap-upsell-plugin' ); ?></label></th>
+                    <th><label for="expiry_date"><?php esc_html_e( 'Expiry Date', 'gift-wrap-upsell-plugin' ); ?></label></th>
                     <td><input id="expiry_date" type="date" name="expiry_date"></td>
                 </tr>
                 <tr>
-                    <th><label for="gwu_image_id"><?php echo esc_html__( 'Image', 'gift-wrap-upsell-plugin' ); ?></label></th>
+                    <th><label for="gwu_image_id"><?php esc_html_e( 'Image', 'gift-wrap-upsell-plugin' ); ?></label></th>
                     <td>
                         <input type="hidden" name="image_id" id="gwu_image_id">
-
                         <button type="button" class="button" id="gwu_upload_btn">
-                            <?php echo esc_html__( 'Select Image', 'gift-wrap-upsell-plugin' ); ?>
+                            <?php esc_html_e( 'Select Image', 'gift-wrap-upsell-plugin' ); ?>
                         </button>
-
                         <button type="button" class="button" id="gwu_remove_btn" style="display:none;">
-                            <?php echo esc_html__( 'Remove Image', 'gift-wrap-upsell-plugin' ); ?>
+                            <?php esc_html_e( 'Remove Image', 'gift-wrap-upsell-plugin' ); ?>
                         </button>
-
                         <div id="gwu_image_preview" style="margin-top:10px;"></div>
                     </td>
                 </tr>
             </table>
 
             <?php submit_button( __( 'Save Wrap', 'gift-wrap-upsell-plugin' ) ); ?>
-
         </form>
     </div>
     <?php
